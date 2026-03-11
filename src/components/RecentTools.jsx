@@ -31,7 +31,7 @@ const CustomSelect = ({ sortBy, setSortBy, setSortOrder }) => {
             {/* Trigger */}
             <button
                 onClick={() => setOpen(o => !o)}
-                className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-white/5 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-violet-500 transition-colors"
+                className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-black text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-violet-500 transition-colors"
             >
                 <span>{selected.label}</span>
                 <ChevronsUpDown size={14} className="text-gray-400 shrink-0" />
@@ -39,14 +39,14 @@ const CustomSelect = ({ sortBy, setSortBy, setSortOrder }) => {
 
             {/* Dropdown */}
             {open && (
-                <div className="absolute top-full left-0 right-0 mt-1 z-30 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] shadow-xl overflow-hidden">
+                <div className="absolute top-full left-0 right-0 mt-1 z-30 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-black shadow-xl overflow-hidden">
                     {sortOptions.map(({ label, col }) => (
                         <button
                             key={col}
                             onClick={() => handleSelect(col)}
                             className={`w-full text-left px-3 py-2.5 text-sm transition-colors ${(sortBy ?? '') === col
-                                    ? 'bg-violet-500/10 text-violet-500 dark:text-violet-400 font-medium'
-                                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
+                                ? 'bg-violet-500/10 text-violet-500 dark:text-violet-400 font-medium'
+                                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
                                 }`}
                         >
                             {label}
@@ -92,7 +92,7 @@ const ToolIcon = ({ tool }) => (
     </div>
 )
 
-function RecentTools({ tools, search }) {
+function RecentTools({ tools, search, onView, onEdit, onDelete }) {
     const [sortBy, setSortBy] = useState(null)
     const [sortOrder, setSortOrder] = useState('asc')
     const [openMenu, setOpenMenu] = useState(null)
@@ -121,14 +121,8 @@ function RecentTools({ tools, search }) {
     const totalPages = Math.ceil(sorted.length / PER_PAGE)
     const paginated = sorted.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 
-    const actions = [
-        { icon: Eye, label: 'View' },
-        { icon: Pencil, label: 'Edit' },
-        { icon: Trash2, label: 'Delete', danger: true },
-    ]
-
     return (
-        <div className="rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden">
+        <div className="rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black overflow-hidden">
 
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-white/10">
@@ -162,7 +156,7 @@ function RecentTools({ tools, search }) {
             {/* Empty state */}
             {tools?.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-black flex items-center justify-center mb-4">
                         <Search size={20} className="text-gray-400" />
                     </div>
                     <p className="text-gray-900 dark:text-white font-medium">Aucun outil trouvé</p>
@@ -212,12 +206,16 @@ function RecentTools({ tools, search }) {
                                 <MoreVertical size={15} />
                             </button>
                             {openMenu === tool.id && (
-                                <div className="absolute right-0 top-8 z-20 w-36 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] shadow-xl overflow-hidden">
-                                    {actions.map((action) => (
+                                <div className="absolute right-0 top-8 z-20 w-36 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-black shadow-xl overflow-hidden">
+                                    {[
+                                        { icon: Eye, label: 'View', fn: onView },
+                                        { icon: Pencil, label: 'Edit', fn: onEdit },
+                                        { icon: Trash2, label: 'Delete', fn: onDelete, danger: true },
+                                    ].map((action) => (
                                         <button
                                             key={action.label}
                                             className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-white/10 transition-colors ${action.danger ? 'text-red-500' : 'text-gray-600 dark:text-gray-300'}`}
-                                            onClick={() => setOpenMenu(null)}
+                                            onClick={() => { action.fn(tool); setOpenMenu(null) }}
                                         >
                                             <action.icon size={14} />
                                             {action.label}
@@ -286,12 +284,16 @@ function RecentTools({ tools, search }) {
                                         <MoreVertical size={15} />
                                     </button>
                                     {openMenu === tool.id && (
-                                        <div className="absolute right-6 top-10 z-20 w-36 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] shadow-xl overflow-hidden">
-                                            {actions.map((action) => (
+                                        <div className="absolute right-6 top-10 z-20 w-36 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-black shadow-xl overflow-hidden">
+                                            {[
+                                                { icon: Eye, label: 'View', fn: onView },
+                                                { icon: Pencil, label: 'Edit', fn: onEdit },
+                                                { icon: Trash2, label: 'Delete', fn: onDelete, danger: true },
+                                            ].map((action) => (
                                                 <button
                                                     key={action.label}
                                                     className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-white/10 transition-colors ${action.danger ? 'text-red-500' : 'text-gray-600 dark:text-gray-300'}`}
-                                                    onClick={() => setOpenMenu(null)}
+                                                    onClick={() => { action.fn(tool); setOpenMenu(null) }}
                                                 >
                                                     <action.icon size={14} />
                                                     {action.label}

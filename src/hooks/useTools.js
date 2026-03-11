@@ -1,9 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
     getRecentTools,
     getAllTools,
     getAnalytics,
     getDepartments,
+    createTool,
+    updateTool,
+    deleteTool,
 } from '../utils/api'
 
 export const useRecentTools = () =>
@@ -29,3 +32,36 @@ export const useDepartments = () =>
         queryKey: ['departments'],
         queryFn: getDepartments,
     })
+
+export const useCreateTool = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: createTool,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['allTools'] })
+            queryClient.invalidateQueries({ queryKey: ['recentTools'] })
+        },
+    })
+}
+
+export const useUpdateTool = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: ({ id, data }) => updateTool(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['allTools'] })
+            queryClient.invalidateQueries({ queryKey: ['recentTools'] })
+        },
+    })
+}
+
+export const useDeleteTool = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: deleteTool,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['allTools'] })
+            queryClient.invalidateQueries({ queryKey: ['recentTools'] })
+        },
+    })
+}

@@ -27,4 +27,14 @@ export const getDepartments = () =>
 export const getUsers = () =>
     api.get('/users').then(r => r.data)
 
+// CRUD
+export const createTool = (data) =>
+    api.post('/tools', data).then(r => r.data)
+
+export const updateTool = (id, data) =>
+    api.patch(`/tools/${id}`, data).then(r => r.data)
+
+export const deleteTool = (id) =>
+    api.delete(`/tools/${id}`).then(r => r.data)
+
 export default api

@@ -9,7 +9,7 @@ const navLinks = [
     { label: 'Settings', path: '/settings' },
 ]
 
-function Header({ darkMode, toggleDarkMode, search, onSearch }) {
+function Header({ darkMode, toggleDarkMode, search, onSearch, placeholder }) {
     const location = useLocation()
     const [menuOpen, setMenuOpen] = useState(false)
     const [avatarOpen, setAvatarOpen] = useState(false)
@@ -17,7 +17,7 @@ function Header({ darkMode, toggleDarkMode, search, onSearch }) {
 
     return (
         <>
-            <header className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-3 sm:px-6 gap-2 sm:gap-6 border-b border-gray-200 dark:border-white/10 bg-white/95 dark:bg-[#0f0f0f]/95 backdrop-blur-sm transition-colors duration-300">
+            <header className="fixed top-0 left-0 right-0 z-40 h-14 flex items-center justify-between px-4 border-b border-gray-200 dark:border-white/10 bg-white dark:bg-black">
 
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 shrink-0">
@@ -34,8 +34,8 @@ function Header({ darkMode, toggleDarkMode, search, onSearch }) {
                             key={link.path}
                             to={link.path}
                             className={`px-3 py-1.5 rounded-md text-sm transition-colors ${location.pathname === link.path
-                                    ? 'text-gray-900 dark:text-white font-medium'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                                ? 'text-gray-900 dark:text-white font-medium'
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                                 }`}
                         >
                             {link.label}
@@ -54,10 +54,10 @@ function Header({ darkMode, toggleDarkMode, search, onSearch }) {
                         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                         <input
                             type="text"
-                            placeholder="Search tools..."
+                            placeholder={placeholder ?? 'Search tools...'}
                             value={search}
                             onChange={e => onSearch(e.target.value)}
-                            className="w-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg pl-8 pr-4 py-2 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-violet-500 transition-colors"
+                            className="w-80 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-white/10 rounded-lg pl-8 pr-4 py-1.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-violet-500 focus:w-80 transition-all"
                         />
                     </div>
 
@@ -95,7 +95,7 @@ function Header({ darkMode, toggleDarkMode, search, onSearch }) {
                         </button>
 
                         {avatarOpen && (
-                            <div className="fixed sm:absolute left-0 right-0 sm:left-auto sm:right-0 top-14 sm:top-10 z-50 sm:w-48 rounded-none sm:rounded-xl border-y sm:border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] shadow-xl overflow-hidden">
+                            <div className="fixed sm:absolute left-0 right-0 sm:left-auto sm:right-0 top-14 sm:top-10 z-50 sm:w-48 rounded-none sm:rounded-xl border-y sm:border border-gray-200 dark:border-white/10 bg-white dark:bg-black shadow-xl overflow-hidden">
                                 {/* User info */}
                                 <div className="px-4 py-3 border-b border-gray-100 dark:border-white/10">
                                     <p className="text-sm font-medium text-gray-900 dark:text-white">Admin User</p>
@@ -144,15 +144,15 @@ function Header({ darkMode, toggleDarkMode, search, onSearch }) {
                 <div className="fixed top-14 left-0 right-0 z-40 md:hidden border-b border-gray-200 dark:border-white/10 bg-white/98 dark:bg-[#0f0f0f]/98 backdrop-blur-sm transition-colors duration-300">
 
                     {/* Search mobile */}
-                    <div className="px-4 pt-4 pb-2 sm:hidden">
+                    <div className={`px-4 pt-4 pb-2 sm:hidden ${location.pathname === '/tools' ? 'hidden' : ''}`}>
                         <div className="relative">
                             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                             <input
                                 type="text"
-                                placeholder="Search tools..."
+                                placeholder={placeholder ?? 'Search tools...'}
                                 value={search}
                                 onChange={e => onSearch(e.target.value)}
-                                className="w-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg pl-8 pr-4 py-2 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-violet-500 transition-colors"
+                                className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-white/10 rounded-lg pl-8 pr-4 py-2 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-violet-500 transition-colors"
                             />
                         </div>
                     </div>
@@ -165,8 +165,8 @@ function Header({ darkMode, toggleDarkMode, search, onSearch }) {
                                 to={link.path}
                                 onClick={() => setMenuOpen(false)}
                                 className={`flex items-center px-3 py-3 rounded-lg text-sm transition-colors ${location.pathname === link.path
-                                        ? 'text-gray-900 dark:text-white font-medium bg-gray-100 dark:bg-white/10'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
+                                    ? 'text-gray-900 dark:text-white font-medium bg-gray-100 dark:bg-white/10'
+                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
                                     }`}
                             >
                                 {link.label}

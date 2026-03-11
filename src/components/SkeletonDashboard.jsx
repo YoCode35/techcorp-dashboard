@@ -3,7 +3,7 @@ const SkeletonBox = ({ className }) => (
 )
 
 const SkeletonKPICard = () => (
-    <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-5">
+    <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] p-5">
         <div className="flex items-start justify-between mb-4">
             <SkeletonBox className="h-4 w-28" />
             <SkeletonBox className="w-9 h-9 rounded-lg" />
@@ -64,7 +64,7 @@ function SkeletonDashboard() {
             </div>
 
             {/* Recent Tools */}
-            <div className="mt-8 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden">
+            <div className="mt-8 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1a1a1a] overflow-hidden">
 
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-white/10">

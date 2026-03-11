@@ -15,8 +15,8 @@ const cards = (analytics, tools) => {
             badgeColor: 'bg-emerald-500',
             icon: TrendingUp,
             iconBg: 'bg-emerald-500',
-            gradient: 'from-emerald-500/10 to-transparent',
             progress: budget ? Math.round((budget.current_month_total / budget.monthly_limit) * 100) : null,
+            gradient: 'from-emerald-500/10 via-transparent to-transparent',
         },
         {
             label: 'Active Tools',
@@ -25,7 +25,7 @@ const cards = (analytics, tools) => {
             badgeColor: 'bg-violet-500',
             icon: Wrench,
             iconBg: 'bg-violet-500',
-            gradient: 'from-violet-500/10 to-transparent',
+            gradient: 'from-violet-500/10 via-transparent to-transparent',
         },
         {
             label: 'Departments',
@@ -34,7 +34,7 @@ const cards = (analytics, tools) => {
             badgeColor: 'bg-orange-500',
             icon: Building2,
             iconBg: 'bg-orange-500',
-            gradient: 'from-orange-500/10 to-transparent',
+            gradient: 'from-orange-500/10 via-transparent to-transparent',
         },
         {
             label: 'Cost/User',
@@ -43,7 +43,7 @@ const cards = (analytics, tools) => {
             badgeColor: 'bg-pink-500',
             icon: Users,
             iconBg: 'bg-pink-500',
-            gradient: 'from-pink-500/10 to-transparent',
+            gradient: 'from-pink-500/10 via-transparent to-transparent',
         },
     ]
 }
@@ -54,10 +54,10 @@ function KPICards({ analytics, tools }) {
             {cards(analytics, tools).map((card) => (
                 <div
                     key={card.label}
-                    className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-5 hover:shadow-md dark:hover:bg-white/8 transition-all duration-200"
+                    className="group relative overflow-hidden rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black p-5 hover:shadow-md transition-all duration-200"
                 >
                     {/* Gradient background */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} pointer-events-none`} />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200`} />
 
                     {/* Header */}
                     <div className="relative flex items-start justify-between mb-4">
