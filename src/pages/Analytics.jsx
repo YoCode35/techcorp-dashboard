@@ -19,20 +19,27 @@ import { formatCurrency, getDaysFromTimeRange } from '@/utils/helpers'
 import { TIME_RANGES } from '@/utils/constants'
 
 const ChartCard = ({ title, subtitle, icon: Icon, children, className }) => (
-    <div className={`rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black overflow-hidden ${className ?? ''}`}>
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100 dark:border-white/10">
-            {Icon && (
-                <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
-                    <Icon size={15} className="text-violet-500" />
-                </div>
-            )}
-            <div>
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
-                {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
-            </div>
+  <div className={`group relative rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black overflow-hidden ${className ?? ''}`}>
+    
+    {/* Gradient hover */}
+    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0" />
+
+    {/* Contenu de la card */}
+    <div className="relative z-10">
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100 dark:border-white/10">
+        {Icon && (
+          <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+            <Icon size={15} className="text-violet-500" />
+          </div>
+        )}
+        <div>
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
+          {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
         </div>
-        <div className="px-6 py-4">{children}</div>
+      </div>
+      <div className="px-6 py-4">{children}</div>
     </div>
+  </div>
 )
 
 const SkeletonBox = ({ className }) => (
