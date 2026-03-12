@@ -1,10 +1,7 @@
 import { useState, useMemo } from 'react'
 import { X, Save, Loader2, ChevronDown } from 'lucide-react'
-import { Button, Input } from './ui'
-
-const CATEGORIES = ['Communication', 'Design', 'Development', 'Productivity', 'Project Management', 'Sales & Marketing', 'Security', 'Analytics', 'Finance', 'HR']
-const STATUSES = ['active', 'expiring', 'unused']
-const DEPARTMENTS = ['Engineering', 'Design', 'Marketing', 'Operations', 'Communication']
+import { Button, Input, Select, Textarea } from '@/components/ui'
+import { CATEGORIES, STATUSES, DEPARTMENTS } from '@/utils/constants'
 
 const defaultForm = {
     name: '',
@@ -155,7 +152,7 @@ function ToolsModal({ mode, tool, onClose, onSubmit, isLoading }) {
                                 <div className="grid grid-cols-2 gap-4">
                                     {/* Catégorie */}
                                     <Field label="Catégorie *" error={errors.category}>
-                                        <CustomSelect
+                                        <Select
                                             value={form.category}
                                             onChange={v => set('category', v)}
                                             placeholder="— Choisir —"
@@ -165,7 +162,7 @@ function ToolsModal({ mode, tool, onClose, onSubmit, isLoading }) {
 
                                     {/* Statut */}
                                     <Field label="Statut *" error={errors.status}>
-                                        <CustomSelect
+                                        <Select
                                             value={form.status}
                                             onChange={v => set('status', v)}
                                             placeholder="— Choisir —"
@@ -176,7 +173,7 @@ function ToolsModal({ mode, tool, onClose, onSubmit, isLoading }) {
 
                                 {/* Département */}
                                 <Field label="Département propriétaire">
-                                    <CustomSelect
+                                    <Select
                                         value={form.owner_department}
                                         onChange={v => set('owner_department', v)}
                                         placeholder="— Choisir —"
@@ -185,12 +182,11 @@ function ToolsModal({ mode, tool, onClose, onSubmit, isLoading }) {
                                 </Field>
 
                                 <Field label="Description">
-                                    <textarea
+                                    <Textarea
                                         placeholder="Description de l'outil..."
                                         value={form.description}
                                         onChange={e => set('description', e.target.value)}
                                         rows={6}
-                                        className={inputClass}
                                     />
                                 </Field>
                             </>

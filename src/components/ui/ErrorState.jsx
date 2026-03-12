@@ -1,5 +1,5 @@
 import { AlertTriangle, RefreshCw } from 'lucide-react'
-import { Button } from './ui'
+import { Button } from '@/components/ui'
 
 function ErrorState({ title, message, onRetry }) {
     return (

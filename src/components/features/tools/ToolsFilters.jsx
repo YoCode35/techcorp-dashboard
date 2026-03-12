@@ -1,7 +1,6 @@
 import { X, SlidersHorizontal } from 'lucide-react'
-
-const STATUSES = ['active', 'expiring', 'unused']
-const CATEGORIES = ['Communication', 'Design', 'Development', 'Productivity', 'Project Management', 'Sales & Marketing', 'Security', 'Analytics', 'Finance', 'HR']
+import { Button, Input } from '@/components/ui'
+import { STATUSES, CATEGORIES } from '@/utils/constants'
 
 const statusLabels = {
     active: 'Active',
@@ -55,12 +54,9 @@ function FiltersContent({ filters, setFilters, departments, onReset }) {
                     )}
                 </div>
                 {activeCount > 0 && (
-                    <button
-                        onClick={onReset}
-                        className="text-xs text-violet-500 hover:text-violet-600 transition-colors"
-                    >
+                    <Button variant="ghost" size="xs" onClick={onReset} className="text-violet-500 hover:text-violet-600">
                         Réinitialiser
-                    </button>
+                    </Button>
                 )}
             </div>
 
@@ -122,20 +118,18 @@ function FiltersContent({ filters, setFilters, departments, onReset }) {
                 {/* Cost Range */}
                 <FilterSection title="Coût mensuel (€)">
                     <div className="flex items-center gap-2">
-                        <input
+                        <Input
                             type="number"
                             placeholder="Min"
                             value={filters.costMin}
                             onChange={e => setFilters(f => ({ ...f, costMin: e.target.value }))}
-                            className="w-full bg-gray-100 dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-violet-500 transition-colors"
                         />
                         <span className="text-gray-400 text-sm shrink-0">—</span>
-                        <input
+                        <Input
                             type="number"
                             placeholder="Max"
                             value={filters.costMax}
                             onChange={e => setFilters(f => ({ ...f, costMax: e.target.value }))}
-                            className="w-full bg-gray-100 dark:bg-black border border-gray-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:border-violet-500 transition-colors"
                         />
                     </div>
                 </FilterSection>
@@ -180,12 +174,9 @@ function ToolsFilters({ filters, setFilters, departments, drawerOpen, setDrawerO
                     <div className="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-black border-r border-gray-200 dark:border-white/10 p-4 lg:hidden flex flex-col">
                         <div className="flex items-center justify-between mb-4">
                             <span className="font-semibold text-gray-900 dark:text-white">Filtres</span>
-                            <button
-                                onClick={() => setDrawerOpen(false)}
-                                className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
-                            >
+                            <Button variant="ghost" size="icon" onClick={() => setDrawerOpen(false)}>
                                 <X size={16} />
-                            </button>
+                            </Button>
                         </div>
                         <FiltersContent
                             filters={filters}

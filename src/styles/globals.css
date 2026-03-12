@@ -1,7 +1,11 @@
+/* ----------------- IMPORTS ----------------- */
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ----------------- VARIANTS ----------------- */
 @variant dark (&:where(.dark, .dark *));
 
+/* ----------------- GLOBAL STYLES ----------------- */
 * {
     font-family: 'Inter', system-ui, sans-serif;
 }
@@ -27,15 +31,9 @@
 /* Grid background pattern */
 .bg-grid {
     background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 64px 64px;
-    background-position: 0px var(--grid-offset-y, 30px);
-}
-
-.dark .bg-grid {
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 64px 64px;
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position-x: 10px;
+    background-position-y: -12px;
 }

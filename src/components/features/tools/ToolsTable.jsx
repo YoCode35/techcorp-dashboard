@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ChevronUp, ChevronDown, MoreVertical, Eye, Pencil, Trash2, CheckSquare, Square, Power } from 'lucide-react'
-import { Button, Badge } from './ui'
+import { Button, Badge } from '@/components/ui'
+import { sortItems, formatCurrency, formatDate } from '@/utils/helpers'
 
 export const StatusBadge = ({ status }) => (
     <Badge variant={status}>
@@ -42,15 +43,7 @@ function ToolsTable({ tools, onEdit, onDelete, onView, onToggle }) {
         setPage(1)
     }
 
-    const sorted = [...(tools ?? [])].sort((a, b) => {
-        if (!sortBy) return 0
-        const valA = a[sortBy] ?? ''
-        const valB = b[sortBy] ?? ''
-        const result = typeof valA === 'number'
-            ? valA - valB
-            : String(valA).localeCompare(String(valB))
-        return sortOrder === 'asc' ? result : -result
-    })
+    const sorted = sortItems(tools ?? [], sortBy, sortOrder)
 
     const totalPages = Math.ceil(sorted.length / PER_PAGE)
     const paginated = sorted.slice((page - 1) * PER_PAGE, page * PER_PAGE)
@@ -86,7 +79,30 @@ function ToolsTable({ tools, onEdit, onDelete, onView, onToggle }) {
                     <span className="text-sm font-medium text-violet-600 dark:text-violet-400">
                         {selected.length} outil{selected.length > 1 ? 's' : ''} sélectionné{selected.length > 1 ? 's' : ''}
                     </span>
-                    <div className="flex items-center gap-2 ml-auto">
+                    <div className="flex items-center gap-2 ml-auto flex-wrap">
+
+                        {/* Actions mono-outil — uniquement si 1 seul sélectionné */}
+                        {selected.length === 1 && (() => {
+                            const tool = tools.find(t => t.id === selected[0])
+                            return tool ? (
+                                <>
+                                    <Button variant="secondary" size="sm" onClick={() => { onView(tool); setSelected([]) }}>
+                                        <Eye size={13} />
+                                        Voir
+                                    </Button>
+                                    <Button variant="secondary" size="sm" onClick={() => { onEdit(tool); setSelected([]) }}>
+                                        <Pencil size={13} />
+                                        Modifier
+                                    </Button>
+                                    <Button variant="warning" size="sm" onClick={() => { onToggle(tool); setSelected([]) }}>
+                                        <Power size={13} />
+                                        {tool.status === 'unused' ? 'Activer' : 'Désactiver'}
+                                    </Button>
+                                </>
+                            ) : null
+                        })()}
+
+                        {/* Supprimer — toujours disponible */}
                         <Button variant="danger" size="sm" onClick={() => {
                             if (window.confirm(`Supprimer ${selected.length} outil(s) ?`)) {
                                 selected.forEach(id => onDelete(id))
@@ -136,10 +152,13 @@ function ToolsTable({ tools, onEdit, onDelete, onView, onToggle }) {
                         {paginated.map(tool => (
                             <tr
                                 key={tool.id}
-                                className={`border-b border-gray-50 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors ${selected.includes(tool.id) ? 'bg-violet-500/5' : ''}`}
+                                className={`group border-b border-gray-50 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-150 ${selected.includes(tool.id) ? 'bg-violet-500/5' : ''}`}
                             >
-                                {/* Checkbox */}
-                                <td className="pl-6 pr-2 py-4">
+                                {/* Checkbox avec barre gauche */}
+                                <td className="pl-6 pr-2 py-4 relative">
+                                    {/* Barre gauche */}
+                                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+
                                     <button onClick={() => toggleSelect(tool.id)} className="text-gray-400 hover:text-violet-500 transition-colors">
                                         {selected.includes(tool.id)
                                             ? <CheckSquare size={16} className="text-violet-500" />
@@ -174,7 +193,7 @@ function ToolsTable({ tools, onEdit, onDelete, onView, onToggle }) {
 
                                 {/* Cost */}
                                 <td className="px-4 py-4 text-sm text-gray-600 dark:text-gray-300">
-                                    {tool.monthly_cost != null ? `€${tool.monthly_cost.toLocaleString()}` : '—'}
+                                    {formatCurrency(tool.monthly_cost)}
                                 </td>
 
                                 {/* Status */}
@@ -184,10 +203,7 @@ function ToolsTable({ tools, onEdit, onDelete, onView, onToggle }) {
 
                                 {/* Last update */}
                                 <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-400">
-                                    {tool.updated_at
-                                        ? new Date(tool.updated_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
-                                        : '—'
-                                    }
+                                    {formatDate(tool.updated_at)}
                                 </td>
 
                                 {/* Actions */}
@@ -252,7 +268,7 @@ function ToolsTable({ tools, onEdit, onDelete, onView, onToggle }) {
                                 <div className="flex items-center gap-3 mt-2 flex-wrap">
                                     <StatusBadge status={tool.status} />
                                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                                        {tool.monthly_cost != null ? `€${tool.monthly_cost.toLocaleString()}` : '—'}
+                                        {formatCurrency(tool.monthly_cost)}
                                     </span>
                                     {tool.active_users_count && (
                                         <span className="text-xs text-gray-400">{tool.active_users_count} users</span>

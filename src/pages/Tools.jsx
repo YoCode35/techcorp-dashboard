@@ -1,23 +1,57 @@
 import { useState, useMemo } from 'react'
 import { Plus, SlidersHorizontal, Search } from 'lucide-react'
-import { useAllTools, useDepartments, useCreateTool, useUpdateTool, useDeleteTool } from '../hooks/useTools'
-import ToolsFilters from '../components/ToolsFilters'
-import ToolsTable from '../components/ToolsTable'
-import ToolsModal from '../components/ToolsModal'
-import ErrorState from '../components/ErrorState'
-import ToolsDetail from '../components/ToolsDetail'
-import { Button, Input } from '../components/ui'
+import MobilePageHeader from '@/components/layout/MobilePageHeader'
+import { useAllTools, useDepartments, useCreateTool, useUpdateTool, useDeleteTool } from '@/hooks/useTools'
+import ToolsFilters from '@/components/features/tools/ToolsFilters'
+import ToolsTable from '@/components/features/tools/ToolsTable'
+import ToolsModal from '@/components/features/tools/ToolsModal'
+import ErrorState from '@/components/ui/ErrorState'
+import ToolsDetail from '@/components/features/tools/ToolsDetail'
+import { Button, Input } from '@/components/ui'
+import { useLocation } from 'react-router-dom'
 
-const defaultFilters = {
-    status: [],
-    departments: [],
-    categories: [],
-    costMin: '',
-    costMax: '',
+const SkeletonBox = ({ className }) => (
+    <div className={`animate-pulse rounded-lg bg-gray-200 dark:bg-white/10 ${className}`} />
+)
+
+function ToolsSkeleton() {
+
+    return (
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-8">
+            <div className="flex items-center justify-between mb-8">
+                <div>
+                    <SkeletonBox className="h-8 w-48 mb-2" />
+                    <SkeletonBox className="h-4 w-72" />
+                </div>
+                <SkeletonBox className="h-9 w-36 rounded-lg" />
+            </div>
+            <div className="flex gap-6">
+                <SkeletonBox className="hidden lg:block w-56 h-96 rounded-xl shrink-0" />
+                <div className="flex-1 rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden">
+                    {[...Array(8)].map((_, i) => (
+                        <div key={i} className="flex items-center gap-4 px-6 py-4 border-b border-gray-100 dark:border-white/5">
+                            <SkeletonBox className="w-8 h-8 rounded-lg shrink-0" />
+                            <SkeletonBox className="h-4 w-32" />
+                            <SkeletonBox className="h-4 w-20 ml-auto" />
+                            <SkeletonBox className="h-5 w-16 rounded-full" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    )
 }
 
 function Tools({ search }) {
-    const [filters, setFilters] = useState(defaultFilters)
+    const location = useLocation()
+
+    const [filters, setFilters] = useState({
+        status: [],
+        departments: [],
+        categories: [],
+        costMin: '',
+        costMax: '',
+    })
     const [drawerOpen, setDrawerOpen] = useState(false)
     const [modal, setModal] = useState(null) // null | { mode: 'add'|'edit'|'view', tool? }
     const [localSearch, setLocalSearch] = useState('')
@@ -29,17 +63,23 @@ function Tools({ search }) {
     const updateTool = useUpdateTool()
     const deleteTool = useDeleteTool()
 
-    const showToast = (message, type = 'success') => {
-        setToast({ message, type })
-        setTimeout(() => setToast(null), 3000)
-    }
+    // Filtres effectifs = URL params + sidebar filters
+    const effectiveFilters = useMemo(() => {
+        const params = new URLSearchParams(location.search)
+        const urlStatus = params.get('status')
+        console.log('location.search:', location.search)
+        console.log('urlStatus:', urlStatus)
+        return {
+            ...filters,
+            status: urlStatus ? [urlStatus] : filters.status,
+        }
+    }, [location.search, filters])
 
-    // Filtering
+    // filteredTools ICI — après tous les hooks
     const filteredTools = useMemo(() => {
         if (!tools) return []
         const q = (search || localSearch).toLowerCase()
         return tools.filter(tool => {
-            // Global search
             if (q && !(
                 tool.name?.toLowerCase().includes(q) ||
                 tool.owner_department?.toLowerCase().includes(q) ||
@@ -47,18 +87,19 @@ function Tools({ search }) {
                 tool.vendor?.toLowerCase().includes(q) ||
                 tool.status?.toLowerCase().includes(q)
             )) return false
-            // Status filter
-            if (filters.status.length > 0 && !filters.status.includes(tool.status)) return false
-            // Department filter
-            if (filters.departments.length > 0 && !filters.departments.includes(tool.owner_department)) return false
-            // Category filter
-            if (filters.categories.length > 0 && !filters.categories.includes(tool.category)) return false
-            // Cost filter
-            if (filters.costMin !== '' && (tool.monthly_cost ?? 0) < Number(filters.costMin)) return false
-            if (filters.costMax !== '' && (tool.monthly_cost ?? 0) > Number(filters.costMax)) return false
+            if (effectiveFilters.status.length > 0 && !effectiveFilters.status.includes(tool.status)) return false
+            if (effectiveFilters.departments.length > 0 && !effectiveFilters.departments.includes(tool.owner_department)) return false
+            if (effectiveFilters.categories.length > 0 && !effectiveFilters.categories.includes(tool.category)) return false
+            if (effectiveFilters.costMin !== '' && (tool.monthly_cost ?? 0) < Number(effectiveFilters.costMin)) return false
+            if (effectiveFilters.costMax !== '' && (tool.monthly_cost ?? 0) > Number(effectiveFilters.costMax)) return false
             return true
         })
-    }, [tools, search, localSearch, filters])
+    }, [tools, search, localSearch, effectiveFilters])
+
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type })
+        setTimeout(() => setToast(null), 3000)
+    }
 
     const handleSubmit = async (formData) => {
         try {
@@ -117,6 +158,13 @@ function Tools({ search }) {
 
     return (
         <div className="max-w-7xl mx-auto px-3 sm:px-6 py-8">
+
+            <MobilePageHeader
+                title="Tools Catalog"
+                placeholder="Search in tools catalog..."
+                search={localSearch}
+                onSearch={setLocalSearch}
+            />
 
             {/* Toast */}
             {toast && (
@@ -185,7 +233,7 @@ function Tools({ search }) {
 
                 {/* Sidebar filters */}
                 <ToolsFilters
-                    filters={filters}
+                    filters={effectiveFilters}
                     setFilters={setFilters}
                     departments={departments}
                     drawerOpen={drawerOpen}
@@ -242,35 +290,6 @@ function Tools({ search }) {
 
         </div>
     )
-    function ToolsSkeleton() {
-        const SkeletonBox = ({ className }) => (
-            <div className={`animate-pulse rounded-lg bg-gray-200 dark:bg-white/10 ${className}`} />
-        )
-        return (
-            <div className="max-w-7xl mx-auto px-3 sm:px-6 py-8">
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <SkeletonBox className="h-8 w-48 mb-2" />
-                        <SkeletonBox className="h-4 w-72" />
-                    </div>
-                    <SkeletonBox className="h-9 w-36 rounded-lg" />
-                </div>
-                <div className="flex gap-6">
-                    <SkeletonBox className="hidden lg:block w-56 h-96 rounded-xl shrink-0" />
-                    <div className="flex-1 rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden">
-                        {[...Array(8)].map((_, i) => (
-                            <div key={i} className="flex items-center gap-4 px-6 py-4 border-b border-gray-100 dark:border-white/5">
-                                <SkeletonBox className="w-8 h-8 rounded-lg shrink-0" />
-                                <SkeletonBox className="h-4 w-32" />
-                                <SkeletonBox className="h-4 w-20 ml-auto" />
-                                <SkeletonBox className="h-5 w-16 rounded-full" />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        )
-    }
 
 }
 

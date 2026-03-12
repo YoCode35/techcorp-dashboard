@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Search, Bell, Settings, Sun, Moon, Zap, Menu, X, User, LogOut } from 'lucide-react'
 import { useState } from 'react'
+import { Input } from '@/components/ui'
 
 const navLinks = [
     { label: 'Dashboard', path: '/' },
@@ -50,14 +51,14 @@ function Header({ darkMode, toggleDarkMode, search, onSearch, placeholder }) {
                 <div className="flex items-center gap-3 sm:gap-2">
 
                     {/* Search */}
-                    <div className="relative hidden sm:block">
-                        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
-                        <input
+                    <div className="hidden sm:block">
+                        <Input
+                            icon={Search}
                             type="text"
                             placeholder={placeholder ?? 'Search tools...'}
                             value={search}
                             onChange={e => onSearch(e.target.value)}
-                            className="w-80 bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-white/10 rounded-lg pl-8 pr-4 py-1.5 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-violet-500 focus:w-80 transition-all"
+                            className="w-80"
                         />
                     </div>
 
@@ -142,21 +143,6 @@ function Header({ darkMode, toggleDarkMode, search, onSearch, placeholder }) {
             {/* Mobile dropdown */}
             {menuOpen && (
                 <div className="fixed top-14 left-0 right-0 z-40 md:hidden border-b border-gray-200 dark:border-white/10 bg-white/98 dark:bg-[#0f0f0f]/98 backdrop-blur-sm transition-colors duration-300">
-
-                    {/* Search mobile */}
-                    <div className={`px-4 pt-4 pb-2 sm:hidden ${location.pathname === '/tools' ? 'hidden' : ''}`}>
-                        <div className="relative">
-                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
-                            <input
-                                type="text"
-                                placeholder={placeholder ?? 'Search tools...'}
-                                value={search}
-                                onChange={e => onSearch(e.target.value)}
-                                className="w-full bg-gray-100 dark:bg-[#151515] border border-gray-200 dark:border-white/10 rounded-lg pl-8 pr-4 py-2 text-sm text-gray-700 dark:text-gray-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:border-violet-500 transition-colors"
-                            />
-                        </div>
-                    </div>
-
                     {/* Nav links mobile */}
                     <nav className="flex flex-col px-4 py-2">
                         {navLinks.map(link => (

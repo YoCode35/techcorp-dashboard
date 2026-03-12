@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import ErrorState from '../components/ErrorState'
+import ErrorState from '@/components/ui/ErrorState'
 
 describe('ErrorState', () => {
     it('affiche le titre par défaut', () => {

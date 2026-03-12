@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Calendar, ChevronUp, ChevronDown, MoreVertical, Eye, Pencil, Trash2, ChevronsUpDown, Search } from 'lucide-react'
+import { Button, Badge } from '@/components/ui'
+import { sortItems, formatCurrency } from '@/utils/helpers'
 
 const sortOptions = [
     { label: '— Aucun tri —', col: '' },
@@ -108,15 +110,7 @@ function RecentTools({ tools, search, onView, onEdit, onDelete }) {
         }
     }
 
-    const sorted = [...(tools ?? [])].sort((a, b) => {
-        if (!sortBy) return 0
-        const valA = a[sortBy] ?? ''
-        const valB = b[sortBy] ?? ''
-        const result = typeof valA === 'number'
-            ? valA - valB
-            : String(valA).localeCompare(String(valB))
-        return sortOrder === 'asc' ? result : -result
-    })
+    const sorted = sortItems(tools ?? [], sortBy, sortOrder)
 
     const totalPages = Math.ceil(sorted.length / PER_PAGE)
     const paginated = sorted.slice((page - 1) * PER_PAGE, page * PER_PAGE)
@@ -143,13 +137,10 @@ function RecentTools({ tools, search, onView, onEdit, onDelete }) {
                     sortOrder={sortOrder}
                 />
                 {sortBy && (
-                    <button
-                        onClick={() => setSortOrder(o => o === 'asc' ? 'desc' : 'asc')}
-                        className="flex items-center gap-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-white/10 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-violet-500 hover:border-violet-400 transition-colors shrink-0"
-                    >
+                    <Button variant="secondary" size="sm" onClick={() => setSortOrder(o => o === 'asc' ? 'desc' : 'asc')} className="shrink-0">
                         {sortOrder === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                         {sortOrder === 'asc' ? 'Asc' : 'Desc'}
-                    </button>
+                    </Button>
                 )}
             </div>
 
@@ -171,7 +162,7 @@ function RecentTools({ tools, search, onView, onEdit, onDelete }) {
                 {paginated.map((tool) => (
                     <div
                         key={tool.id}
-                        className="flex items-start justify-between p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                        className="flex items-start justify-between p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-150 group"
                     >
                         {/* Left : icon + infos */}
                         <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -184,9 +175,9 @@ function RecentTools({ tools, search, onView, onEdit, onDelete }) {
                                     {tool.owner_department ?? '—'}
                                 </p>
                                 <div className="flex items-center gap-3 mt-2">
-                                    <StatusBadge status={tool.status} />
+                                    <Badge variant={tool.status} />
                                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                                        {tool.monthly_cost != null ? `€${tool.monthly_cost.toLocaleString()}` : '—'}
+                                        {formatCurrency(tool.monthly_cost)}
                                     </span>
                                     {tool.active_users_count && (
                                         <span className="text-xs text-gray-400">
@@ -271,10 +262,10 @@ function RecentTools({ tools, search, onView, onEdit, onDelete }) {
                                 <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{tool.owner_department ?? '—'}</td>
                                 <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">{tool.active_users_count ?? '—'}</td>
                                 <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                                    {tool.monthly_cost != null ? `€${tool.monthly_cost.toLocaleString()}` : '—'}
+                                    {formatCurrency(tool.monthly_cost)}
                                 </td>
                                 <td className="px-6 py-4">
-                                    <StatusBadge status={tool.status} />
+                                    <Badge variant={tool.status} />
                                 </td>
                                 <td className="px-6 py-4 relative">
                                     <button
@@ -315,20 +306,22 @@ function RecentTools({ tools, search, onView, onEdit, onDelete }) {
                         Page {page} sur {totalPages}
                     </span>
                     <div className="flex gap-2">
-                        <button
+                        <Button
+                            variant="secondary"
+                            size="sm"
                             onClick={() => setPage(p => Math.max(1, p - 1))}
                             disabled={page === 1}
-                            className="px-3 py-1 text-xs rounded-lg border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                         >
                             Précédent
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            size="sm"
                             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                             disabled={page === totalPages}
-                            className="px-3 py-1 text-xs rounded-lg border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                         >
                             Suivant
-                        </button>
+                        </Button>
                     </div>
                 </div>
             )}

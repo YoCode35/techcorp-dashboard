@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Dashboard from './pages/Dashboard'
 import Tools from './pages/Tools'
 import Analytics from './pages/Analytics'
-import Header from './components/Header'
+import Header from './components/layout/Header'
 
 function AppContent() {
   const [darkMode, setDarkMode] = useState(true)
@@ -34,9 +34,9 @@ function AppContent() {
       />
       <main className="pt-14">
         <Routes>
-          <Route path="/" element={<Dashboard search={search} />} />
+          <Route path="/" element={<Dashboard search={search} onSearch={setSearch} />} />
           <Route path="/tools" element={<Tools search={search} />} />
-          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/analytics" element={<Analytics search={search} onSearch={setSearch} />} />
         </Routes>
       </main>
     </div>

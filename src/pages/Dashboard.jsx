@@ -1,13 +1,16 @@
-import { useRecentTools, useAnalytics, useAllTools, useUpdateTool, useDeleteTool } from '../hooks/useTools'
+import { useRecentTools, useAnalytics, useAllTools, useUpdateTool, useDeleteTool } from '@/hooks/useTools'
 import { useState } from 'react'
-import KPICards from '../components/KPICards'
-import RecentTools from '../components/RecentTools'
-import SkeletonDashboard from '../components/SkeletonDashboard'
-import ErrorState from '../components/ErrorState'
-import ToolsModal from '../components/ToolsModal'
-import ToolsDetail from '../components/ToolsDetail'
+import { Search } from 'lucide-react'
+import { Input } from '@/components/ui'
+import MobilePageHeader from '@/components/layout/MobilePageHeader'
+import KPICards from '@/components/features/dashboard/KPICards'
+import RecentTools from '@/components/features/dashboard/RecentTools'
+import SkeletonDashboard from '@/components/features/dashboard/SkeletonDashboard'
+import ErrorState from '@/components/ui/ErrorState'
+import ToolsModal from '@/components/features/tools/ToolsModal'
+import ToolsDetail from '@/components/features/tools/ToolsDetail'
 
-function Dashboard({ search }) {
+function Dashboard({ search, onSearch }) {
     const { data: recentTools, isLoading: loadingTools, isError: errorTools, refetch: refetchTools } = useRecentTools()
     const { data: allTools, isError: errorAllTools } = useAllTools()
     const { data: analytics, isLoading: loadingAnalytics, isError: errorAnalytics, refetch: refetchAnalytics } = useAnalytics()
@@ -54,6 +57,25 @@ function Dashboard({ search }) {
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Internal Tools Dashboard</h1>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Monitor and manage your organization's software tools and expenses</p>
             </div>
+
+            <MobilePageHeader
+                title="Dashboard"
+                placeholder="Search tools..."
+                search={search}
+                onSearch={onSearch}
+            />
+
+            {/* Search mobile */}
+            <div className="sm:hidden mb-6">
+                <Input
+                    icon={Search}
+                    type="text"
+                    placeholder="Search tools..."
+                    value={search}
+                    onChange={e => onSearch(e.target.value)}
+                />
+            </div>
+
             <KPICards analytics={analytics} tools={allTools} />
             <div className="mt-8">
                 <RecentTools
