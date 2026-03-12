@@ -19,27 +19,27 @@ import { formatCurrency, getDaysFromTimeRange } from '@/utils/helpers'
 import { TIME_RANGES } from '@/utils/constants'
 
 const ChartCard = ({ title, subtitle, icon: Icon, children, className }) => (
-  <div className={`group relative rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black overflow-hidden ${className ?? ''}`}>
-    
-    {/* Gradient hover */}
-    <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0" />
+    <div className={`group relative rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black overflow-hidden ${className ?? ''}`}>
 
-    {/* Contenu de la card */}
-    <div className="relative z-10">
-      <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100 dark:border-white/10">
-        {Icon && (
-          <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
-            <Icon size={15} className="text-violet-500" />
-          </div>
-        )}
-        <div>
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
-          {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+        {/* Gradient hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-0" />
+
+        {/* Contenu de la card */}
+        <div className="relative z-10">
+            <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100 dark:border-white/10">
+                {Icon && (
+                    <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                        <Icon size={15} className="text-violet-500" />
+                    </div>
+                )}
+                <div>
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{title}</h3>
+                    {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+                </div>
+            </div>
+            <div className="px-6 py-4">{children}</div>
         </div>
-      </div>
-      <div className="px-6 py-4">{children}</div>
     </div>
-  </div>
 )
 
 const SkeletonBox = ({ className }) => (
@@ -169,6 +169,7 @@ function Analytics({ search, onSearch }) {
             </div>
 
             {/* KPI Row */}
+            {/* KPI Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <InsightKPI
                     label="Budget mensuel"
@@ -178,6 +179,7 @@ function Analytics({ search, onSearch }) {
                     trendLabel={kpi?.budget_change}
                     icon={DollarSign}
                     iconBg="bg-emerald-500"
+                    gradient="from-emerald-500/20"
                 />
                 <InsightKPI
                     label="Coût par utilisateur"
@@ -186,6 +188,7 @@ function Analytics({ search, onSearch }) {
                     trendLabel={kpi?.cost_per_user_change}
                     icon={Users}
                     iconBg="bg-pink-500"
+                    gradient="from-pink-500/20"
                 />
                 <InsightKPI
                     label="Outils actifs"
@@ -194,6 +197,7 @@ function Analytics({ search, onSearch }) {
                     trendLabel={kpi?.tools_change}
                     icon={Wrench}
                     iconBg="bg-violet-500"
+                    gradient="from-violet-500/20"
                 />
                 <InsightKPI
                     label="Taux d'adoption"
@@ -203,6 +207,7 @@ function Analytics({ search, onSearch }) {
                     trendLabel="Stable"
                     icon={Activity}
                     iconBg="bg-cyan-500"
+                    gradient="from-cyan-500/20"
                 />
             </div>
 

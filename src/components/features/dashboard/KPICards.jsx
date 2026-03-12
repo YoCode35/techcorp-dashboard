@@ -20,6 +20,7 @@ function KPICards({ analytics, tools }) {
                 trendLabel={kpi?.budget_change}
                 icon={TrendingUp}
                 iconBg="bg-emerald-500"
+                gradient="from-emerald-500/20"
                 progress={budgetProgress}
             />
             <InsightKPI
@@ -29,6 +30,7 @@ function KPICards({ analytics, tools }) {
                 trendLabel={kpi?.tools_change}
                 icon={Wrench}
                 iconBg="bg-violet-500"
+                gradient="from-violet-500/20"
             />
             <InsightKPI
                 label="Departments"
@@ -37,6 +39,7 @@ function KPICards({ analytics, tools }) {
                 trendLabel={kpi?.departments_change}
                 icon={Building2}
                 iconBg="bg-orange-500"
+                gradient="from-orange-500/20"
             />
             <InsightKPI
                 label="Cost/User"
@@ -45,6 +48,7 @@ function KPICards({ analytics, tools }) {
                 trendLabel={kpi?.cost_per_user_change}
                 icon={Users}
                 iconBg="bg-pink-500"
+                gradient="from-pink-500/20"
             />
         </div>
     )
